@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Алексей — Новое лицо российских соцсетей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Inter+Tight:wght@300;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --color-bg:     #f0e7e7;
+      --color-dark:   #2d2828;
+      --color-white:  #ffffff;
+      --color-scroll: #f9f9f9;
+      --color-orange: #EE760E;
+      --font-brand:   'Inter Tight', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --fs-hero:      clamp(72px, 22.5vw, 419px);
+      --fs-subtitle:  clamp(18px, 3.2vw, 48px);
+      --fw-semibold:  600;
+      --fw-medium:    500;
+      --fw-light:     300;
+      --radius-btn:   12px;
+      --circle-size:  clamp(200px, 32vw, 491px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow-x: hidden; }
+    body { background: var(--color-bg); font-family: var(--font-body); color: var(--color-dark); -webkit-font-smoothing: antialiased; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Text layer 1 — solid dark, z=1, behind circle */
+    .hero__word {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-brand); font-weight: var(--fw-semibold);
+      font-size: var(--fs-hero); line-height: 1; letter-spacing: -0.05em;
+      color: var(--color-dark); white-space: nowrap; text-align: center;
+      user-select: none; pointer-events: none; z-index: 1;
+    }
+
+    /* Text layer 2 — white soft-light, z=3, in front of circle */
+    .hero__word--overlay {
+      z-index: 3;
+      color: #ffffff;
+      mix-blend-mode: soft-light;
+    }
+
+    /* Photo circle — this whole thing scales */
+    .hero__photo-wrap {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      width: var(--circle-size); height: var(--circle-size);
+      border-radius: 50%; overflow: hidden;
+      z-index: 2; will-change: transform;
+    }
+    .hero__photo {
+      width: 100%; height: 100%; object-fit: cover;
+      border-radius: 50%; display: block;
+      pointer-events: none; user-select: none; -webkit-user-drag: none;
+    }
+
+    /* Subtitle base — z=1 behind circle */
+    .hero__subtitle {
+      position: absolute; left: 50%; bottom: 128px;
+      transform: translateX(-50%);
+      font-family: var(--font-brand); font-weight: var(--fw-light);
+      font-size: var(--fs-subtitle); line-height: 1; letter-spacing: -0.05em;
+      color: var(--color-dark); white-space: nowrap; text-align: center;
+      z-index: 1; pointer-events: none; user-select: none;
+    }
+
+    /* Subtitle overlay — z=4, soft-light over circle */
+    .hero__subtitle--overlay {
+      position: absolute; left: 50%; bottom: 128px;
+      transform: translateX(-50%);
+      font-family: var(--font-brand); font-weight: var(--fw-light);
+      font-size: var(--fs-subtitle); line-height: 1; letter-spacing: -0.05em;
+      color: #ffffff; white-space: nowrap; text-align: center;
+      z-index: 4; mix-blend-mode: soft-light;
+      pointer-events: none; user-select: none;
+    }
+
+    /* Scroll dot */
+    .hero__scroll { position: absolute; left: 50%; bottom: 48px; transform: translateX(-50%); width: 20px; height: 32px; z-index: 4; }
+    .hero__scroll-track { width: 100%; height: 100%; border: 1px solid var(--color-scroll); border-radius: 100px; position: relative; }
+    .hero__scroll-dot { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); width: 2px; height: 5.6px; background: var(--color-scroll); border-radius: 10px; animation: scrollBounce 1.8s ease-in-out infinite; }
+    @keyframes scrollBounce { 0%,100%{bottom:14px;opacity:1} 50%{bottom:6px;opacity:.4} }
+
+    /* ── NAVBAR — БУРГЕР ВЕЗДЕ ── */
+    .navbar {
+      position: absolute; top: 20px; left: 50%;
+      transform: translateX(-50%);
+      width: min(1849px, calc(100% - 40px));
+      height: 79px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 100;
+    }
+
+    .navbar__logo { display: flex; align-items: center; text-decoration: none; }
+    .navbar__logo-text {
+      font-family: var(--font-brand); font-weight: var(--fw-semibold);
+      font-size: 24px; line-height: 24px; letter-spacing: -2.4px;
+      color: var(--color-dark); text-transform: uppercase; white-space: nowrap;
+    }
+
+    /* Hamburger — видим на ВСЕХ экранах */
+    .navbar__hamburger {
+      display: flex; flex-direction: column; gap: 5px;
+      align-items: center; justify-content: center;
+      width: 52px; height: 52px;
+      border: 1px solid var(--color-dark); border-radius: var(--radius-btn);
+      background: transparent; cursor: pointer; flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .navbar__hamburger:hover { background: rgba(45,40,40,0.06); }
+    .navbar__hamburger-line {
+      display: block; width: 20px; height: 2px;
+      background: var(--color-dark); border-radius: 2px;
+      transition: transform .3s ease, opacity .3s ease; transform-origin: center;
+    }
+    .navbar__hamburger[aria-expanded="true"] .navbar__hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .navbar__hamburger[aria-expanded="true"] .navbar__hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .navbar__hamburger[aria-expanded="true"] .navbar__hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Fullscreen menu */
+    .navbar__menu {
+      position: fixed; inset: 0;
+      background: var(--color-bg);
+      z-index: 99;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 48px 60px;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .navbar__menu.is-open { opacity: 1; visibility: visible; }
+
+    .navbar__menu-list { list-style: none; display: flex; flex-direction: column; }
+    .navbar__menu-link {
+      display: block; padding: 20px 0;
+      font-family: var(--font-brand); font-weight: var(--fw-semibold);
+      font-size: clamp(32px, 5vw, 60px); letter-spacing: -0.04em;
+      color: var(--color-dark); text-decoration: none;
+      border-bottom: 1px solid rgba(45,40,40,0.12);
+      transition: opacity 0.2s;
+    }
+    .navbar__menu-link:hover { opacity: 0.5; }
+
+    .navbar__menu-cta { margin-top: 48px; }
+    .navbar__menu-cta a {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 14px 32px;
+      background: var(--color-dark); border-radius: var(--radius-btn);
+      font-family: var(--font-body); font-weight: var(--fw-medium);
+      font-size: 15px; color: var(--color-white); text-decoration: none;
+    }
+
+    /* ── GESTURE PANEL ── */
+    .gesture-panel {
+      position: fixed; bottom: 28px; right: 28px;
+      z-index: 200; display: flex; flex-direction: column;
+      align-items: flex-end; gap: 12px;
+    }
+
+    /* Orange button */
+    .gesture-toggle {
+      display: flex; align-items: center; gap: 10px;
+      padding: 15px 26px;
+      background: var(--color-orange);
+      color: var(--color-white); border: none; border-radius: 50px;
+      font-family: var(--font-body); font-size: 15px; font-weight: var(--fw-medium);
+      cursor: pointer; letter-spacing: -0.01em; white-space: nowrap;
+      box-shadow: 0 6px 24px rgba(238,118,14,0.38);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    }
+    .gesture-toggle:hover { transform: scale(1.04); box-shadow: 0 8px 30px rgba(238,118,14,0.5); }
+    .gesture-toggle.active { background: #c05800; box-shadow: 0 4px 16px rgba(192,88,0,0.4); }
+    .gesture-toggle__icon { font-size: 18px; }
+
+    /* Camera preview */
+    .gesture-preview {
+      position: relative; width: 220px; height: 165px;
+      border-radius: 16px; overflow: hidden;
+      background: #111; border: 2px solid rgba(238,118,14,0.5);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3); display: none;
+    }
+    .gesture-preview.visible { display: block; }
+    .gesture-preview video, .gesture-preview canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+    .gesture-preview video  { transform: scaleX(-1); }
+    .gesture-preview canvas { transform: scaleX(-1); }
+    .gesture-status {
+      position: absolute; top: 8px; left: 8px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      font-size: 10px; font-family: var(--font-body);
+      padding: 3px 10px; border-radius: 20px;
+      pointer-events: none; backdrop-filter: blur(4px);
+    }
+    .zoom-badge {
+      position: absolute; bottom: 8px; right: 8px;
+      background: var(--color-orange); color: #fff;
+      font-size: 12px; font-weight: 700; font-family: var(--font-body);
+      padding: 4px 10px; border-radius: 20px;
+      pointer-events: none; min-width: 46px; text-align: center;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .navbar { top: 12px; width: calc(100% - 32px); }
+      .navbar__logo-text { font-size: 18px; }
+      .hero__subtitle, .hero__subtitle--overlay {
+        font-size: clamp(14px, 5vw, 22px); letter-spacing: -0.04em;
+        bottom: 60px; width: 88%; white-space: normal; text-align: center;
+      }
+      .hero__scroll { bottom: 20px; }
+      .gesture-panel { bottom: 20px; right: 16px; }
+      .gesture-toggle { font-size: 13px; padding: 12px 18px; gap: 8px; }
+      .gesture-toggle__icon { font-size: 15px; }
+      .gesture-preview { width: 180px; height: 135px; }
+    }
+  </style>
+</head>
+<body>
+
+<div style="position:relative;width:100%;min-height:100vh;overflow:hidden;">
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar" aria-label="Основная навигация">
+      <a href="#" class="navbar__logo" aria-label="Алексей — главная">
+        <span class="navbar__logo-text">алексей</span>
+      </a>
+      <button class="navbar__hamburger" id="hamburger-btn"
+              aria-label="Открыть меню" aria-expanded="false" aria-controls="main-menu">
+        <span class="navbar__hamburger-line"></span>
+        <span class="navbar__hamburger-line"></span>
+        <span class="navbar__hamburger-line"></span>
+      </button>
+    </nav>
+
+    <!-- Fullscreen menu -->
+    <div class="navbar__menu" id="main-menu" aria-hidden="true" role="dialog" aria-label="Меню навигации">
+      <ul class="navbar__menu-list">
+        <li><a href="#services"   class="navbar__menu-link">Услуги</a></li>
+        <li><a href="#advantages" class="navbar__menu-link">Преимущества</a></li>
+        <li><a href="#contacts"   class="navbar__menu-link">Контакты</a></li>
+      </ul>
+      <div class="navbar__menu-cta">
+        <a href="#contacts">Связаться со мной</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero" aria-label="Главный экран">
+      <p class="hero__word" aria-hidden="true">алексей</p>
+
+      <div class="hero__photo-wrap" id="photo-wrap">
+        <img class="hero__photo"
+          src="https://www.figma.com/api/mcp/asset/3b4639db-5e9d-47af-8c07-5af8e3523bc2"
+          alt="Алексей на яхте" draggable="false" />
+      </div>
+
+      <p class="hero__word hero__word--overlay" aria-hidden="true">алексей</p>
+
+      <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">
+        Алексей — Новое лицо российских соцсетей
+      </h1>
+
+      <p class="hero__subtitle"         aria-hidden="true">Новое лицо российских соцсетей</p>
+      <p class="hero__subtitle--overlay" aria-hidden="true">Новое лицо российских соцсетей</p>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <div class="hero__scroll-track"><div class="hero__scroll-dot"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- GESTURE PANEL -->
+  <div class="gesture-panel">
+    <div class="gesture-preview" id="gesture-preview">
+      <video id="camera-video" autoplay playsinline muted></video>
+      <canvas id="gesture-canvas"></canvas>
+      <div class="gesture-status" id="gesture-status">Загрузка…</div>
+      <div class="zoom-badge" id="zoom-badge">1.0×</div>
+    </div>
+    <button class="gesture-toggle" id="gesture-toggle" aria-label="Смотреть удачное фото">
+      <span class="gesture-toggle__icon">📸</span>
+      <span id="toggle-label">Смотреть удачное фото</span>
+    </button>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── Menu ── */
+  const hBtn = document.getElementById('hamburger-btn');
+  const menu = document.getElementById('main-menu');
+
+  function openMenu(){ menu.classList.add('is-open'); hBtn.setAttribute('aria-expanded','true'); menu.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function closeMenu(){ menu.classList.remove('is-open'); hBtn.setAttribute('aria-expanded','false'); menu.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+  hBtn.addEventListener('click', function(){ hBtn.getAttribute('aria-expanded')==='true' ? closeMenu() : openMenu(); });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+
+  /* ── Scale ── */
+  const wrap = document.getElementById('photo-wrap');
+  const badge = document.getElementById('zoom-badge');
+  const MIN=1, MAX=3.5;
+  let cur=1, tgt=1, raf=null;
+
+  function clamp(v,a,b){ return Math.min(b,Math.max(a,v)); }
+  function setWrap(s){ wrap.style.transform='translate(-50%,-50%) scale('+s+')'; }
+
+  function lerp(){
+    if(raf) return;
+    function loop(){
+      cur+=(tgt-cur)*0.10;
+      if(Math.abs(tgt-cur)<0.001){ cur=tgt; setWrap(cur); badge.textContent=cur.toFixed(1)+'×'; raf=null; return; }
+      setWrap(cur); badge.textContent=cur.toFixed(1)+'×';
+      raf=requestAnimationFrame(loop);
+    }
+    raf=requestAnimationFrame(loop);
+  }
+
+  function scaleTo(s,instant){
+    tgt=clamp(s,MIN,MAX);
+    if(instant){ cur=tgt; setWrap(cur); badge.textContent=cur.toFixed(1)+'×'; if(raf){cancelAnimationFrame(raf);raf=null;} } else lerp();
+  }
+
+  document.addEventListener('wheel',function(e){ e.preventDefault(); scaleTo(tgt*(e.deltaY<0?1.10:0.91),false); },{passive:false});
+
+  let lp=null;
+  document.addEventListener('touchstart',function(e){ if(e.touches.length===2) lp=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); },{passive:true});
+  document.addEventListener('touchmove',function(e){ if(e.touches.length===2&&lp){ e.preventDefault(); const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY); scaleTo(tgt*(d/lp),false); lp=d; } },{passive:false});
+  document.addEventListener('touchend',function(e){ if(e.touches.length<2) lp=null; });
+
+  let lastTap=0;
+  document.addEventListener('dblclick',function(){ scaleTo(1,false); });
+  document.addEventListener('touchend',function(e){ if(e.changedTouches.length===1){ const n=Date.now(); if(n-lastTap<280) scaleTo(1,false); lastTap=n; } });
+
+  /* ── MediaPipe ── */
+  const toggleBtn=document.getElementById('gesture-toggle');
+  const toggleLbl=document.getElementById('toggle-label');
+  const preview=document.getElementById('gesture-preview');
+  const videoEl=document.getElementById('camera-video');
+  const canvasEl=document.getElementById('gesture-canvas');
+  const statusEl=document.getElementById('gesture-status');
+  let active=false, cam=null, hands=null, baseDist=null, baseScale=1;
+
+  function d2(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+
+  function onResults(r){
+    const ctx=canvasEl.getContext('2d');
+    canvasEl.width=videoEl.videoWidth||640; canvasEl.height=videoEl.videoHeight||480;
+    ctx.clearRect(0,0,canvasEl.width,canvasEl.height);
+    if(!r.multiHandLandmarks||!r.multiHandLandmarks.length){ statusEl.textContent='👀 Покажи руку'; baseDist=null; return; }
+    const lm=r.multiHandLandmarks[0], w=canvasEl.width, h=canvasEl.height;
+    if(window.drawConnectors&&window.HAND_CONNECTIONS) drawConnectors(ctx,lm,HAND_CONNECTIONS,{color:'rgba(255,255,255,0.5)',lineWidth:1.5});
+    if(window.drawLandmarks) drawLandmarks(ctx,lm,{color:'#EE760E',lineWidth:1,radius:2});
+    const th=lm[4], ix=lm[8];
+    [th,ix].forEach(function(p){ ctx.beginPath(); ctx.arc(p.x*w,p.y*h,10,0,Math.PI*2); ctx.fillStyle='rgba(238,118,14,0.9)'; ctx.fill(); });
+    ctx.beginPath(); ctx.moveTo(th.x*w,th.y*h); ctx.lineTo(ix.x*w,ix.y*h); ctx.strokeStyle='#EE760E'; ctx.lineWidth=2.5; ctx.stroke();
+    const dd=d2(th,ix);
+    if(baseDist===null){ baseDist=dd; baseScale=cur; }
+    const ns=clamp(baseScale*(dd/baseDist),MIN,MAX); tgt=ns; lerp();
+    ctx.fillStyle='#EE760E'; ctx.font='bold 13px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(ns.toFixed(1)+'×',((th.x+ix.x)/2)*w,((th.y+ix.y)/2)*h-16);
+    statusEl.textContent='✋ Управляю жестом';
+  }
+
+  async function start(){
+    preview.classList.add('visible'); statusEl.textContent='Загрузка модели…';
+    try{
+      hands=new Hands({locateFile:function(f){return'https://cdn.jsdelivr.net/npm/@mediapipe/hands/'+f;}});
+      hands.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:0.72,minTrackingConfidence:0.65});
+      hands.onResults(onResults);
+      const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}}});
+      videoEl.srcObject=stream; await videoEl.play();
+      if(window.Camera){ cam=new Camera(videoEl,{onFrame:async function(){await hands.send({image:videoEl});},width:640,height:480}); cam.start(); }
+      else{ (async function loop(){ if(!active) return; await hands.send({image:videoEl}); requestAnimationFrame(loop); })(); }
+      statusEl.textContent='👀 Покажи руку';
+      toggleLbl.textContent='Выключить камеру';
+      toggleBtn.classList.add('active');
+    } catch(e){
+      statusEl.textContent=e.name==='NotAllowedError'?'🚫 Нет доступа к камере':'❌ '+e.message;
+    }
+  }
+
+  function stop(){
+    if(cam){cam.stop();cam=null;} if(hands){hands.close();hands=null;}
+    if(videoEl.srcObject){videoEl.srcObject.getTracks().forEach(function(t){t.stop();});videoEl.srcObject=null;}
+    baseDist=null; preview.classList.remove('visible');
+    toggleLbl.textContent='Смотреть удачное фото';
+    toggleBtn.classList.remove('active');
+  }
+
+  toggleBtn.addEventListener('click',function(){ active=!active; active?start():stop(); });
+  setWrap(1);
+})();
+</script>
+</body>
+</html>
